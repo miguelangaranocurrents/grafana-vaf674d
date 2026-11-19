@@ -762,6 +762,12 @@ function normalizeZone(zone: string | Zone): Zone {
     return FixedOffsetZone.instance(0);
   }
 
+  // Like moment-timezone, don't produce an invalid DateTime for unknown zones such as the
+  // 'default' pseudo zone; fall back to the system zone.
+  if (!IANAZone.isValidZone(name)) {
+    return Settings.defaultZone;
+  }
+
   let normalized = easyTzZoneCache.get(name);
 
   if (!normalized) {
